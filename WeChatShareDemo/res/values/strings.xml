@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">WeChatShareDemo</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="shareText">微信分享文本</string>
+    <string name="shareImg">微信分享图片</string>
+    <string name="shareWebPage">微信分享网页</string>
+
+</resources>

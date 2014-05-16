@@ -1,0 +1,32 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity" >
+
+    <Button
+        android:id="@+id/shareText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/shareText" 
+        android:onClick="onButtonClick"/>
+    <Button
+        android:id="@+id/shareImg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/shareImg"
+        android:layout_below="@id/shareText"
+        android:onClick="onButtonClick" />
+    <Button
+        android:id="@+id/shareWebPage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/shareWebPage"
+        android:layout_below="@id/shareImg"
+        android:onClick="onButtonClick" />
+
+</RelativeLayout>
