@@ -120,17 +120,26 @@ public class WXShare {
 	 * @param bMap 图片
 	 */
 	public void shareImgMessage(boolean isTimeLine, Bitmap bMap) {				
-		final int THUMB_SIZE = 150;
+		// 为保证能较为清晰的分享，先按长宽比例压缩大小，再压缩质量，直到缩略图小于32k
+		final int thumb_size_height = 600;
 		Bitmap bmp = bMap;
+		int bitmapHeight = bmp.getHeight();
+		int bitmapWidth = bmp.getWidth();
+		final int thumb_size_width = bitmapWidth * thumb_size_height / bitmapHeight;
 		WXImageObject imgObj = new WXImageObject(bmp);
 		
 		WXMediaMessage msg = new WXMediaMessage();
 		msg.mediaObject = imgObj;
 		//msg.description = "这是图片";
 		
-		Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, THUMB_SIZE, THUMB_SIZE, true);
+		Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, thumb_size_width, thumb_size_height, true);
 		bmp.recycle();
-		msg.thumbData = Util.bmpToByteArray(thumbBmp, true);  // 设置缩略图
+		byte[] outByteArray = Util.compressImage2ByteArray(thumbBmp, true);
+		if (outByteArray.length / 1024 >= 32) {
+			Toast.makeText(mContext, "抱歉，由于图片太大，分享失败！", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		msg.thumbData = outByteArray;// 设置缩略图  NOTE: The file size should be within 32KB.
 
 		SendMessageToWX.Req req = new SendMessageToWX.Req();
 		req.transaction = buildTransaction("img");

@@ -21,6 +21,27 @@ public class Util {
 	
 	private static final String TAG = "SDK_Sample.Util";
 	
+	//微信分享图片，缩略图要求32K以内，NOTE: The file size should be within 32KB；经测试，等于32K也不可以分享
+	public static byte[] compressImage2ByteArray(Bitmap image, boolean needRecycle) {	  
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中  
+        int quality = 100;
+        Log.e("ANDY", "size0:"+ baos.toByteArray().length / 1024 + "k");       
+        while (baos.toByteArray().length / 1024 >= 32) {  //循环判断如果压缩后图片是否大于32kb,大于继续压缩    
+        	if (quality <= 0) {
+        		return baos.toByteArray();
+        	}
+            baos.reset();//重置baos即清空baos  
+            image.compress(Bitmap.CompressFormat.JPEG, quality, baos);//Some formats, like PNG which is lossless, will ignore the quality setting 
+            Log.e("ANDY", "size1:"+ baos.toByteArray().length / 1024 + "k");
+        	quality -= 10;//每次都减少10
+        } 
+        if (needRecycle) {
+        	image.recycle();
+		}
+        return baos.toByteArray();
+    } 
+	
 	public static byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		bmp.compress(CompressFormat.PNG, 100, output);
