@@ -17,24 +17,37 @@ import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
 import android.util.Log;
 
+/**
+ * 图片处理工具类
+ * 部分方法由微信分享SDK example提供
+ */
 public class Util {
 	
+	/** max decode picture size */
+	private static final int MAX_DECODE_PICTURE_SIZE = 1920 * 1440;
+	/** log tag */
 	private static final String TAG = "SDK_Sample.Util";
 	
-	//微信分享图片，缩略图要求32K以内，NOTE: The file size should be within 32KB；经测试，等于32K也不可以分享
+	/**
+	 * 微信分享图片，缩略图要求32K以内，NOTE: The file size should be within 32KB；
+	 * 经测试，等于32K也不可以分享
+	 * @param image
+	 * @param needRecycle
+	 * @return
+	 */
 	public static byte[] compressImage2ByteArray(Bitmap image, boolean needRecycle) {	  
         ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中  
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);// 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中  
         int quality = 100;
-        Log.e("ANDY", "size0:"+ baos.toByteArray().length / 1024 + "k");       
-        while (baos.toByteArray().length / 1024 >= 32) {  //循环判断如果压缩后图片是否大于32kb,大于继续压缩    
+      
+        while (baos.toByteArray().length / 1024 >= 32) {  // 循环判断如果压缩后图片是否大于32kb,大于继续压缩    
         	if (quality <= 0) {
         		return baos.toByteArray();
         	}
-            baos.reset();//重置baos即清空baos  
-            image.compress(Bitmap.CompressFormat.JPEG, quality, baos);//Some formats, like PNG which is lossless, will ignore the quality setting 
-            Log.e("ANDY", "size1:"+ baos.toByteArray().length / 1024 + "k");
-        	quality -= 10;//每次都减少10
+            baos.reset();// 重置baos即清空baos 
+            // Some formats, like PNG which is lossless, will ignore the quality setting 
+            image.compress(Bitmap.CompressFormat.JPEG, quality, baos);
+        	quality -= 10;// 每次都减少10
         } 
         if (needRecycle) {
         	image.recycle();
@@ -48,40 +61,40 @@ public class Util {
 		if (needRecycle) {
 			bmp.recycle();
 		}
-		
+
 		byte[] result = output.toByteArray();
 		try {
 			output.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
 	
 	public static byte[] getHtmlByteArray(final String url) {
-		 URL htmlUrl = null;     
-		 InputStream inStream = null;     
-		 try {         
-			 htmlUrl = new URL(url);         
-			 URLConnection connection = htmlUrl.openConnection();         
-			 HttpURLConnection httpConnection = (HttpURLConnection)connection;         
-			 int responseCode = httpConnection.getResponseCode();         
-			 if(responseCode == HttpURLConnection.HTTP_OK){             
-				 inStream = httpConnection.getInputStream();         
-			  }     
-			 } catch (MalformedURLException e) {               
-				 e.printStackTrace();     
-			 } catch (IOException e) {              
-				e.printStackTrace();    
-		  } 
+		URL htmlUrl = null;
+		InputStream inStream = null;
+		try {
+			htmlUrl = new URL(url);
+			URLConnection connection = htmlUrl.openConnection();
+			HttpURLConnection httpConnection = (HttpURLConnection) connection;
+			int responseCode = httpConnection.getResponseCode();
+			if (responseCode == HttpURLConnection.HTTP_OK) {
+				inStream = httpConnection.getInputStream();
+			}
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		byte[] data = inputStreamToByte(inStream);
 
 		return data;
 	}
 	
 	public static byte[] inputStreamToByte(InputStream is) {
-		try{
+		try {
 			ByteArrayOutputStream bytestream = new ByteArrayOutputStream();
 			int ch;
 			while ((ch = is.read()) != -1) {
@@ -90,10 +103,10 @@ public class Util {
 			byte imgdata[] = bytestream.toByteArray();
 			bytestream.close();
 			return imgdata;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 	
@@ -112,17 +125,18 @@ public class Util {
 			len = (int) file.length();
 		}
 
-		Log.d(TAG, "readFromFile : offset = " + offset + " len = " + len + " offset + len = " + (offset + len));
+		Log.d(TAG, "readFromFile : offset = " + offset + " len = " + len
+				+ " offset + len = " + (offset + len));
 
-		if(offset <0){
+		if (offset < 0) {
 			Log.e(TAG, "readFromFile invalid offset:" + offset);
 			return null;
 		}
-		if(len <=0 ){
+		if (len <= 0) {
 			Log.e(TAG, "readFromFile invalid len:" + len);
 			return null;
 		}
-		if(offset + len > (int) file.length()){
+		if (offset + len > (int) file.length()) {
 			Log.e(TAG, "readFromFile invalid file len:" + file.length());
 			return null;
 		}
@@ -142,7 +156,6 @@ public class Util {
 		return b;
 	}
 	
-	private static final int MAX_DECODE_PICTURE_SIZE = 1920 * 1440;
 	public static Bitmap extractThumbNail(final String path, final int height, final int width, final boolean crop) {
 		Assert.assertTrue(path != null && !path.equals("") && height > 0 && width > 0);
 

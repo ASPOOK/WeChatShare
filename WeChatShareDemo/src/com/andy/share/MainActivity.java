@@ -9,6 +9,12 @@ import android.graphics.BitmapFactory;
 import android.view.Menu;
 import android.view.View;
 
+/**
+ * 微信分享测试示例
+ * 
+ * @author Andy
+ * 
+ */
 public class MainActivity extends Activity {
 
 	@Override
@@ -23,8 +29,10 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+
 	/**
 	 * 按钮点击事件，前提是在WXShare文件中配置你申请的APP_ID，否则调不起微信分享功能
+	 * 
 	 * @param v
 	 */
 	public void onButtonClick(View v) {

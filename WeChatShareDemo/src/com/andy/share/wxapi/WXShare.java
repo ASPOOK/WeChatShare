@@ -16,20 +16,30 @@ import com.tencent.mm.sdk.openapi.WXMediaMessage;
 import com.tencent.mm.sdk.openapi.WXTextObject;
 import com.tencent.mm.sdk.openapi.WXWebpageObject;
 
+/**
+ * 微信分享核心类
+ * 
+ * @author Andy
+ * 
+ */
 public class WXShare {
 
+	/** 在微信开放平台注册后拿到的appid */
 	private static final String APP_ID = "your_appid";
+	private static final int TIMELINE_SUPPORTED_VERSION = 0x21020001; // 4.2以上支持发送到朋友圈
+
 	private static WXShare instance = null;
 	private static IWXAPI api = null;
-	private static final int TIMELINE_SUPPORTED_VERSION = 0x21020001; // 4.2 以上支持发送到朋友圈
+
 	private Context mContext;
-	
+
 	private WXShare(Context context) {
 		this.mContext = context;
 	}
 	
 	/**
 	 * 注册微信
+	 * 
 	 * @param mContext
 	 * @return
 	 */
@@ -46,10 +56,15 @@ public class WXShare {
 	
 	/**
 	 * 分享WXAppExtendObject类型的数据，只能分享给好友
-	 * @param title 标题
-	 * @param imgPath 图片路径
-	 * @param description  内容的简洁描述
-	 * @param extInfo 其他信息，包含跳转传值及跳转目标类名，字符串 限制2KB大小
+	 * 
+	 * @param title
+	 *            标题
+	 * @param imgPath
+	 *            图片路径
+	 * @param description
+	 *            内容的简洁描述
+	 * @param extInfo
+	 *            其他信息，包含跳转传值及跳转目标类名，字符串 限制2KB大小
 	 */
 	public void shareAppDataToFriend(String title, String imgPath, String description, String extInfo) {
 		try {
@@ -83,8 +98,11 @@ public class WXShare {
 	
 	/**
 	 * 微信分享文本消息
-	 * @param isTimeLine 是否分享到朋友圈，false为分享给好友
-	 * @param text 文本内容
+	 * 
+	 * @param isTimeLine
+	 *            是否分享到朋友圈，false为分享给好友
+	 * @param text
+	 *            文本内容
 	 */
 	public void shareTextMessage(boolean isTimeLine, String text, String description) {
 		try {
@@ -125,8 +143,11 @@ public class WXShare {
 	
 	/**
 	 * 微信分享图片消息
-	 * @param isTimeLine 是否分享到朋友圈，false为分享给好友
-	 * @param bMap 图片
+	 * 
+	 * @param isTimeLine
+	 *            是否分享到朋友圈，false为分享给好友
+	 * @param bMap
+	 *            图片
 	 */
 	public void shareImgMessage(boolean isTimeLine, Bitmap bMap) {
 		try {			
@@ -174,11 +195,17 @@ public class WXShare {
 	 
 	/**
 	 * 微信分享网页消息
-	 * @param isTimeLine 是否分享到朋友圈，false为分享给好友
-	 * @param webPageUrl 网页的网址
-	 * @param title 标题
-	 * @param description 内容描述
-	 * @param bMap 网页分享中的左侧小图片
+	 * 
+	 * @param isTimeLine
+	 *            是否分享到朋友圈，false为分享给好友
+	 * @param webPageUrl
+	 *            网页的网址
+	 * @param title
+	 *            标题
+	 * @param description
+	 *            内容描述
+	 * @param bMap
+	 *            网页分享中的左侧小图片
 	 */
 	public void shareWebPage(boolean isTimeLine, String webPageUrl, String title, String description, Bitmap bMap) {
 		try {
@@ -225,46 +252,49 @@ public class WXShare {
 	
 	/**
 	 * 启动微信
+	 * 
 	 * @return
 	 */
 	public boolean lanuchWX() {
 		return api.openWXApp();
-	}	
-    
+	}
+
 	/**
 	 * 是否支持发送到朋友圈
+	 * 
 	 * @return
 	 */
-    public boolean isSupportTimeLine() {
-    	int wxSdkVersion = api.getWXAppSupportAPI();
+	public boolean isSupportTimeLine() {
+		int wxSdkVersion = api.getWXAppSupportAPI();
 		if (wxSdkVersion >= TIMELINE_SUPPORTED_VERSION) {
 			return true;
 		} else {
 			return false;
 		}
-    }
-    
-    /**
-     * 微信App是否已安装
-     * @return
-     */
-    public boolean isWXAppInstalled() {
-    	try {
-    		return api.isWXAppInstalled();	
+	}
+
+	/**
+	 * 判断微信App是否已安装
+	 * 
+	 * @return
+	 */
+	public boolean isWXAppInstalled() {
+		try {
+			return api.isWXAppInstalled();
 		} catch (Exception e) {
 			return false;
-		}    		
-    }
-    
-    /**
-     * 处理onReq或onResp响应
-     * 在WXEntryActivity的onCreate中调用
-     * @param intent
-     * @param handler
-     */
-    public void handleIntent(Intent intent, IWXAPIEventHandler handler) {
-    	if (api != null) {
-    		api.handleIntent(intent, handler);
-    	}        
-    }
+		}
+	}
+
+	/**
+	 * 处理onReq或onResp响应 在WXEntryActivity的onCreate中调用
+	 * 
+	 * @param intent
+	 * @param handler
+	 */
+	public void handleIntent(Intent intent, IWXAPIEventHandler handler) {
+		if (api != null) {
+			api.handleIntent(intent, handler);
+		}
+	}
 }
